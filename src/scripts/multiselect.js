@@ -44,6 +44,44 @@ multiselect.show = function(e) {
 
 }
 
+multiselect.isSelected = function (e) {
+	return (ids.indexOf(e.data('id')) >= 0);
+}
+
+multiselect.append = function (e) {
+	let id = e.data('id')
+
+	if (id!=='0' && id!==0 && id!=='f' && id!=='s' && id!=='r' && id!=null) {
+		if (! multiselect.isSelected(e)) {
+			ids.push(id)
+			e.addClass('active')
+		}
+	}
+}
+
+multiselect.remove = function (e) {
+	let id = e.data('id')
+
+	if (id!=='0' && id!==0 && id!=='f' && id!=='s' && id!=='r' && id!=null) {
+		if (multiselect.isSelected(e)){
+			var idx=ids.indexOf(e.data('id'))
+			ids.splice( idx, 1 );
+		}
+	}
+	e.removeClass('active')
+	}
+}
+
+multiselect.toggle = function (e) {
+	let id = e.data('id')
+	var index = ids.indexOf(id);
+	if (index >= 0) {
+		multiselect.remove(e);
+	} else {
+		multiselect.append(e);
+	}
+}
+
 multiselect.selectAll = function() {
 
 	if (lychee.publicMode)                   return false
@@ -178,6 +216,20 @@ multiselect.getSize = function() {
 
 }
 
+multiselect.rangeSelection = function(b,e) {
+
+	if (b>e) {
+		multiselect.rangeSelection(e,b)
+	} else {
+		$('.photo, .album').each(function() {
+			let idx = $(this).data('id')
+			if ( b <= idx && idx <= e ) {
+				multiselect.append($(this))
+			}
+		})
+	}
+}
+
 multiselect.getSelection = function(e) {
 
 	let tolerance = 150
@@ -196,14 +248,7 @@ multiselect.getSelection = function(e) {
 			(offset.top + 206)<=(size.top + size.height + tolerance) &&
 			(offset.left + 206)<=(size.left + size.width + tolerance)) {
 
-			let id = $(this).data('id')
-
-			if (id!=='0' && id!==0 && id!=='f' && id!=='s' && id!=='r' && id!=null) {
-
-				ids.push(id)
-				$(this).addClass('active')
-
-			}
+			multiselect.append($(this))
 
 		}
 
