@@ -69,7 +69,6 @@ multiselect.remove = function (e) {
 		}
 	}
 	e.removeClass('active')
-	}
 }
 
 multiselect.toggle = function (e) {
